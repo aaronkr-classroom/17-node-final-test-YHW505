@@ -98,19 +98,19 @@ router.use((req, res, next) => {
  */
 
 // 애플리케이션에 Mongoose 설정
-const mongoose = require("mongoose"), // mongoose를 요청
-  dbName = "ut-nodejs";
+const mongoose = require("mongoose"); // mongoose를 요청
 
 // 데이터베이스 연결 설정
-mongoose.connect(`mongodb://127.0.0.1:27017/${dbName}`, {
+mongoose.connect(`mongodb+srv://guddn50521:s4z8fMWR1uGufFDR@ut-node.kzuzlta.mongodb.net/`, {
   useNewUrlParser: true,
 });
 
 // 연결되면 메시지를 보냄
 const db = mongoose.connection;
 db.once("open", () => {
-  console.log(`Connected to ${dbName} MongoDB using Mongoose!`);
+  console.log(`Connected DB`);
 });
+
 
 /**
  * =====================================================================
@@ -194,13 +194,33 @@ router.delete(
  * Look at the User routes above for guidance = 위의 사용자 라우트를 참고
  * =====================================================================
  */
-// 1. index 라우트 생성 (모든 레코드 보기) = GET /discussions,                index 액션, index 뷰
-// 2. 생성 폼을 보기 위한 요청 처리        = GET /discussions/new,            new 액션
+// 1. index 라우트 생성 (모든 레코드 보기) = GET /discussions,                index 액션, index 뷰  O
+// 2. 생성 폼을 보기 위한 요청 처리        = GET /discussions/new,            new 액션  O
 // 3. 생성 데이터의 처리와 결과            = POST /discussions/create,        create 액션, redirectView 뷰
 // 4. show를 처리하기 위한 라우트          = GET /discussions/:id,            show 액션, showView 뷰
 // 5. edit를 처리하기 위한 라우트          = GET /discussions/:id/edit,       edit 액션
 // 6. 편집 데이터의 처리와 결과            = PUT /discussions/:id/update,     update 액션, redirectView 뷰
 // 7. 삭제를 처리하기 위한 라우트          = DELETE /discussions/:id/delete,  delete 액션, redirectView 뷰
+
+router.get("/discussions", discussionsController.index, discussionsController.indexView);
+router.get("/discussions/new", discussionsController.new);
+router.post(
+  "/discussions/create",
+  discussionsController.create,
+  discussionsController.redirectView
+); 
+router.get("/discussions/:id", discussionsController.show, discussionsController.showView);
+router.get("/discussions/:id/edit", discussionsController.edit); // viewing을 처리하기 위한 라우트 추가
+router.put(
+  "/discussions/:id/update",
+  discussionsController.update,
+  discussionsController.redirectView
+); // 편집 폼에서 받아온 데이터의 처리와 결과를 사용자 보기 페이지에 보여주기
+router.delete(
+  "/discussions/:id/delete",
+  discussionsController.delete,
+  discussionsController.redirectView
+);
 
 /**
  * Comments
