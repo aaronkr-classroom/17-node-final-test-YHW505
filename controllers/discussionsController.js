@@ -30,8 +30,9 @@ module.exports = {
     if (req.skip) next(); 
     let discussionParams = getDiscussionParams(req.body, req.user);
     Discussion.create(discussionParams)
-    .then(() => {
+    .then((discussion) => {
       res.locals.redirect = "/discussions"; // 사용자 인덱스 페이지로 리디렉션
+      res.locals.discussion = discussion;
       next();
     })
     .catch((error) => {
